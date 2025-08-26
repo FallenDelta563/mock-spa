@@ -1,0 +1,819 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Zensation AI - Live Demo Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #FF006E; 
+            --secondary: #C913B9; 
+            --accent: #7928CA;
+            --dark: #000000; 
+            --darker: #0A0A0A;
+            --gray: #111111;
+            --light: #FFFFFF; 
+            --success: #00D9FF;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--dark); 
+            color: var(--light); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(201, 19, 185, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(121, 40, 202, 0.1) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes bgMove {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        
+        nav { 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            background: rgba(0, 0, 0, 0.9); 
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 3rem; 
+            z-index: 1000; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        
+        .hero { 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 2rem; 
+            padding-top: 6rem;
+        }
+        
+        h1 { 
+            font-size: 4.5rem; 
+            font-weight: 900; 
+            margin-bottom: 1.5rem; 
+            letter-spacing: -2px;
+        }
+        
+        .gradient-text { 
+            background: linear-gradient(135deg, #FF006E 0%, #C913B9 50%, #7928CA 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .demo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 2rem; 
+            max-width: 1200px; 
+            margin: 0 auto 4rem; 
+            padding: 2rem; 
+        }
+        
+        .demo-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            padding: 2.5rem; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(201, 19, 185, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .demo-card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--primary); 
+            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.3);
+        }
+        
+        .demo-card:hover::before {
+            opacity: 1;
+        }
+        
+        .demo-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .demo-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.5);
+        }
+        
+        .logout-btn { 
+            background: var(--primary); 
+            color: white; 
+            padding: 0.5rem 1.5rem; 
+            border-radius: 20px; 
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .logout-btn:hover {
+            background: var(--secondary);
+            box-shadow: 0 5px 20px rgba(201, 19, 185, 0.5);
+        }
+        
+        /* Additional implementations section */
+        .implementations-section {
+            background: rgba(17, 17, 17, 0.8);
+            padding: 5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .implementations-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .implementation-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .implementation-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .implementation-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .implementation-item p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Live status indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: var(--gray);
+            border-radius: 20px;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 3rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .demo-grid { grid-template-columns: 1fr; }
+            .implementation-grid { grid-template-columns: 1fr; }
+            nav { padding: 1rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Beauty Zensation AI</div>
+            <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div>
+            <h1 class="gradient-text">AI Demo Portal</h1>
+            <p class="subtitle">Experience 6 Powerful AI Solutions with Live Demos</p>
+            
+            <div class="demo-grid">
+                <!-- 24/7 AI Assistant -->
+                <div class="demo-card" onclick="openDemo('ai-assistant')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>24/7 AI Assistant</h3>
+                    <p>GPT-4 powered chat that never sleeps. Handle customer inquiries, book appointments, and provide instant support.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+                
+                <!-- Voice AI System -->
+                <div class="demo-card" onclick="openDemo('voice-ai')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>Voice AI System</h3>
+                    <p>Natural conversations with ElevenLabs technology. Automated phone handling and appointment confirmations.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+                
+                <!-- Predictive Analytics -->
+                <div class="demo-card" onclick="openDemo('analytics')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>Predictive Analytics</h3>
+                    <p>94% accurate revenue predictions. Identify no-shows, predict client lifetime value, and optimize pricing.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+                
+                <!-- Smart Scheduling -->
+                <div class="demo-card" onclick="openDemo('scheduling')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>Smart Scheduling</h3>
+                    <p>AI-optimized appointment booking that maximizes revenue and minimizes gaps in your schedule.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+                
+                <!-- Review Manager -->
+                <div class="demo-card" onclick="openDemo('reviews')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>Review Manager</h3>
+                    <p>Automated reputation management. AI responds to reviews and solicits feedback from happy clients.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+                
+                <!-- Client Intelligence -->
+                <div class="demo-card" onclick="openDemo('client-intel')">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <h3>Client Intelligence</h3>
+                    <p>Deep insights into client behavior, preferences, and purchase patterns for personalized experiences.</p>
+                    <button class="demo-button">Try Live Demo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Additional Implementations Section -->
+    <section class="implementations-section">
+        <div class="implementations-container">
+            <h2 class="section-title">40+ AI & Automation Solutions</h2>
+            
+            <div class="implementation-grid">
+                <!-- Revenue Optimization -->
+                <div class="implementation-item">
+                    <h4>Dynamic Pricing Engine</h4>
+                    <p>AI adjusts service prices based on demand, time slots, and client history to maximize revenue</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Upsell Recommendation System</h4>
+                    <p>Suggests additional treatments based on client profile and purchase history with 85% accuracy</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Package Deal Optimizer</h4>
+                    <p>Creates personalized treatment packages that increase average transaction value by 40%</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Membership Program AI</h4>
+                    <p>Designs and manages loyalty programs with predictive churn analysis</p>
+                </div>
+                
+                <!-- Client Experience -->
+                <div class="implementation-item">
+                    <h4>Virtual Consultation Bot</h4>
+                    <p>Pre-appointment consultations with AI-powered skin analysis and treatment recommendations</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Personalized Email Campaigns</h4>
+                    <p>AI writes and sends targeted emails based on client behavior and preferences</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>SMS Reminder System</h4>
+                    <p>Intelligent reminders that reduce no-shows by 75% with personalized messaging</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Birthday & Special Occasion AI</h4>
+                    <p>Automated greetings and special offers for client milestones</p>
+                </div>
+                
+                <!-- Operational Efficiency -->
+                <div class="implementation-item">
+                    <h4>Inventory Management AI</h4>
+                    <p>Predicts product usage and automates reordering to prevent stockouts</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Staff Schedule Optimizer</h4>
+                    <p>Creates optimal staff schedules based on predicted demand and employee preferences</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Equipment Maintenance Predictor</h4>
+                    <p>Predicts when devices need servicing to prevent downtime</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Energy Usage Optimizer</h4>
+                    <p>Reduces utility costs by 30% through smart scheduling and usage patterns</p>
+                </div>
+                
+                <!-- Marketing Automation -->
+                <div class="implementation-item">
+                    <h4>Social Media Content Generator</h4>
+                    <p>Creates engaging posts, stories, and reels automatically with your brand voice</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Google Ads AI Manager</h4>
+                    <p>Optimizes ad spend and targeting for maximum ROI on paid search</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>SEO Content Writer</h4>
+                    <p>Generates blog posts and website content optimized for local search</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Influencer Matching System</h4>
+                    <p>Identifies and connects with local influencers for partnerships</p>
+                </div>
+                
+                <!-- Financial Intelligence -->
+                <div class="implementation-item">
+                    <h4>Revenue Forecasting Model</h4>
+                    <p>Predicts monthly revenue with 92% accuracy for better planning</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Expense Categorization AI</h4>
+                    <p>Automatically categorizes and tracks all business expenses</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Tax Optimization Assistant</h4>
+                    <p>Identifies deductions and optimizes tax strategy year-round</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Cash Flow Predictor</h4>
+                    <p>Anticipates cash crunches and suggests preventive actions</p>
+                </div>
+                
+                <!-- Client Retention -->
+                <div class="implementation-item">
+                    <h4>Churn Prevention System</h4>
+                    <p>Identifies at-risk clients and triggers retention campaigns</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Win-Back Campaign AI</h4>
+                    <p>Re-engages dormant clients with personalized offers</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Referral Program Automator</h4>
+                    <p>Manages and optimizes client referral incentives</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>VIP Client Manager</h4>
+                    <p>Provides white-glove service automation for top clients</p>
+                </div>
+                
+                <!-- Treatment Innovation -->
+                <div class="implementation-item">
+                    <h4>Treatment Outcome Predictor</h4>
+                    <p>Predicts results based on client characteristics and history</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Before/After Photo Analyzer</h4>
+                    <p>AI analyzes treatment effectiveness from photo comparisons</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Skin Type Classifier</h4>
+                    <p>Automatically determines skin type and recommended treatments</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Treatment Plan Generator</h4>
+                    <p>Creates multi-session treatment plans optimized for results</p>
+                </div>
+                
+                <!-- Competitive Intelligence -->
+                <div class="implementation-item">
+                    <h4>Competitor Price Monitor</h4>
+                    <p>Tracks competitor pricing and suggests strategic adjustments</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Market Trend Analyzer</h4>
+                    <p>Identifies emerging treatments and market opportunities</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Review Sentiment Analyzer</h4>
+                    <p>Analyzes competitor reviews to identify your advantages</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Service Gap Identifier</h4>
+                    <p>Finds profitable services competitors aren't offering</p>
+                </div>
+                
+                <!-- Compliance & Safety -->
+                <div class="implementation-item">
+                    <h4>HIPAA Compliance Monitor</h4>
+                    <p>Ensures all communications and data handling meet regulations</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Consent Form Automator</h4>
+                    <p>Digital consent forms with automatic reminders and storage</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Insurance Verification AI</h4>
+                    <p>Automatically verifies client insurance coverage and benefits</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Safety Protocol Tracker</h4>
+                    <p>Ensures all safety procedures are followed and documented</p>
+                </div>
+                
+                <!-- Advanced Analytics -->
+                <div class="implementation-item">
+                    <h4>Service Performance Dashboard</h4>
+                    <p>Real-time analytics on every treatment's profitability</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Client Journey Mapper</h4>
+                    <p>Visualizes and optimizes the entire client experience</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>ROI Calculator</h4>
+                    <p>Measures return on investment for every business decision</p>
+                </div>
+                
+                <div class="implementation-item">
+                    <h4>Predictive Maintenance AI</h4>
+                    <p>Prevents equipment failures before they impact service</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Demo Modals -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="demoContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Check authentication
+        window.addEventListener('load', () => {
+            const authenticated = sessionStorage.getItem('authenticated');
+            if (!authenticated || authenticated !== 'true') {
+                window.location.href = 'landing.html';
+            }
+        });
+        
+        function logout() {
+            sessionStorage.removeItem('authenticated');
+            sessionStorage.removeItem('authTime');
+            window.location.href = 'landing.html';
+        }
+        
+        // Demo functions
+        function openDemo(demoType) {
+            const modal = document.getElementById('demoModal');
+            const content = document.getElementById('demoContent');
+            
+            // Demo content based on type
+            const demos = {
+                'ai-assistant': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">24/7 AI Assistant Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                        <p style="margin-bottom: 1rem;">Try our AI assistant by typing a question:</p>
+                        <input type="text" id="chatInput" placeholder="Ask about treatments, pricing, or book an appointment..." style="width: 100%; padding: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; margin-bottom: 1rem;">
+                        <button onclick="sendChat()" style="background: var(--primary); color: white; padding: 0.75rem 2rem; border: none; border-radius: 10px; cursor: pointer;">Send Message</button>
+                        <div id="chatResponse" style="margin-top: 2rem; padding: 1rem; background: rgba(0,217,255,0.1); border-radius: 10px; display: none;">
+                            <strong>AI Assistant:</strong> <span id="responseText"></span>
+                        </div>
+                    </div>
+                `,
+                'voice-ai': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">Voice AI System Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px;">
+                        <p style="margin-bottom: 2rem;">Experience our voice AI handling a client call:</p>
+                        <button onclick="playVoiceDemo()" style="background: var(--primary); color: white; padding: 1rem 3rem; border: none; border-radius: 10px; cursor: pointer; font-size: 1.1rem;">
+                            🎤 Start Voice Demo
+                        </button>
+                        <div id="voiceStatus" style="margin-top: 2rem; display: none;">
+                            <p style="color: var(--success);">Voice AI is now handling the call...</p>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                                <p><strong>AI:</strong> "Thank you for calling Beauty Zensation. How can I help you today?"</p>
+                                <p style="margin-top: 0.5rem;"><strong>Client:</strong> "I'd like to book a Botox appointment."</p>
+                                <p style="margin-top: 0.5rem;"><strong>AI:</strong> "I'd be happy to help you schedule that. We have availability tomorrow at 2 PM or Thursday at 10 AM. Which works better for you?"</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'analytics': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">Predictive Analytics Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px;">
+                        <h3 style="margin-bottom: 1rem;">Revenue Predictions</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            <div style="background: rgba(0,217,255,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                                <h4 style="color: var(--success); margin-bottom: 0.5rem;">This Month</h4>
+                                <p style="font-size: 2rem; font-weight: bold;">$127,450</p>
+                                <p style="color: rgba(255,255,255,0.6);">+12% vs last month</p>
+                            </div>
+                            <div style="background: rgba(255,0,110,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Next Month</h4>
+                                <p style="font-size: 2rem; font-weight: bold;">$134,200</p>
+                                <p style="color: rgba(255,255,255,0.6);">94% confidence</p>
+                            </div>
+                            <div style="background: rgba(201,19,185,0.1); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                                <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">Q2 Forecast</h4>
+                                <p style="font-size: 2rem; font-weight: bold;">$412,000</p>
+                                <p style="color: rgba(255,255,255,0.6);">Growth opportunity</p>
+                            </div>
+                        </div>
+                        <button onclick="showMoreAnalytics()" style="background: var(--primary); color: white; padding: 0.75rem 2rem; border: none; border-radius: 10px; cursor: pointer;">View Detailed Analytics</button>
+                    </div>
+                `,
+                'scheduling': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">Smart Scheduling Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px;">
+                        <p style="margin-bottom: 2rem;">AI optimizes your schedule for maximum revenue:</p>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <h4 style="color: var(--success); margin-bottom: 1rem;">Today's Optimized Schedule</h4>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,217,255,0.1); border-radius: 5px;">
+                                    <span>9:00 AM - Botox (45 min)</span>
+                                    <span style="color: var(--success);">$650</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,217,255,0.1); border-radius: 5px;">
+                                    <span>10:00 AM - Dermal Fillers (60 min)</span>
+                                    <span style="color: var(--success);">$800</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,0,110,0.1); border-radius: 5px;">
+                                    <span>11:15 AM - AI Suggested: Combo Treatment</span>
+                                    <span style="color: var(--primary);">$1,200</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.6);">AI filled a gap with a high-value treatment, increasing daily revenue by $1,200</p>
+                    </div>
+                `,
+                'reviews': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">Review Manager Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px;">
+                        <h3 style="margin-bottom: 1rem;">AI-Generated Review Response</h3>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <p style="color: var(--success); margin-bottom: 0.5rem;">★★★★★ Sarah M.</p>
+                            <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.8);">"Amazing experience! The staff was professional and results exceeded expectations."</p>
+                            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                                <p style="color: var(--primary); margin-bottom: 0.5rem;">AI Response:</p>
+                                <p style="color: rgba(255,255,255,0.7);">"Thank you so much, Sarah! We're thrilled you had such a wonderful experience. Your satisfaction is our top priority, and we can't wait to see you again for your next treatment. Don't forget about our loyalty program for exclusive perks! 💕"</p>
+                            </div>
+                        </div>
+                        <button onclick="generateResponse()" style="background: var(--primary); color: white; padding: 0.75rem 2rem; border: none; border-radius: 10px; cursor: pointer;">Generate Another Response</button>
+                    </div>
+                `,
+                'client-intel': `
+                    <h2 style="color: var(--primary); margin-bottom: 2rem;">Client Intelligence Demo</h2>
+                    <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px;">
+                        <h3 style="margin-bottom: 1rem;">Client Profile: Jennifer Smith</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                                <h4 style="color: var(--success); margin-bottom: 0.5rem;">Lifetime Value</h4>
+                                <p style="font-size: 1.5rem; font-weight: bold;">$12,450</p>
+                                <p style="color: rgba(255,255,255,0.6);">Top 5% of clients</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Preferred Treatments</h4>
+                                <p>Botox (every 3 months), Dermal Fillers (annually), Chemical Peels (quarterly)</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                                <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">AI Recommendations</h4>
+                                <p>• Likely to purchase IPL package (87% probability)</p>
+                                <p>• Due for Botox appointment in 2 weeks</p>
+                                <p>• High referral potential - suggest VIP program</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            };
+            
+            content.innerHTML = demos[demoType] || '<p>Demo coming soon...</p>';
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('demoModal').style.display = 'none';
+        }
+        
+        // Demo interactions
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const response = document.getElementById('chatResponse');
+            const responseText = document.getElementById('responseText');
+            
+            if (input.value.trim()) {
+                response.style.display = 'block';
+                responseText.textContent = 'I understand you\'re asking about "' + input.value + '". In our full system, I would provide detailed information about treatments, check availability, and even book appointments for you. Our AI handles thousands of client interactions daily with 98% satisfaction!';
+                input.value = '';
+            }
+        }
+        
+        function playVoiceDemo() {
+            const status = document.getElementById('voiceStatus');
+            status.style.display = 'block';
+        }
+        
+        function showMoreAnalytics() {
+            alert('In the full system, you would see detailed breakdowns by service, provider, time of day, and predictive models for the next 12 months!');
+        }
+        
+        function generateResponse() {
+            alert('AI would generate unique, personalized responses for each review, maintaining your brand voice while addressing specific feedback!');
+        }
+        
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('demoModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
